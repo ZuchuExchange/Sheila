@@ -1,0 +1,268 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SHEILA CHEPTOO | Portfolio</title>
+    <style>
+        :root {
+            --primary: #00f2fe;
+            --secondary: #4facfe;
+            --bg: #0a0a0a;
+            --card-bg: #1a1a1a;
+            --text: #ffffff;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: var(--bg);
+            color: var(--text);
+            margin: 0;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            min-height: 100vh;
+            overflow-x: hidden;
+        }
+
+        /* Header Section */
+        header {
+            text-align: center;
+            padding: 50px 20px;
+            animation: fadeIn 1.5s ease;
+        }
+
+        h1 {
+            font-size: 3rem;
+            letter-spacing: 5px;
+            margin-bottom: 10px;
+            background: linear-gradient(to right, var(--primary), var(--secondary));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .description {
+            font-size: 1.1rem;
+            color: #ccc;
+            max-width: 600px;
+        }
+
+        /* Buttons */
+        .btn {
+            background: linear-gradient(45deg, var(--secondary), var(--primary));
+            border: none;
+            padding: 15px 30px;
+            color: white;
+            font-weight: bold;
+            border-radius: 30px;
+            cursor: pointer;
+            transition: transform 0.3s, box-shadow 0.3s;
+            text-decoration: none;
+            display: inline-block;
+            margin: 20px 0;
+            font-size: 1rem;
+        }
+
+        .btn:hover {
+            transform: scale(1.05);
+            box-shadow: 0 0 20px rgba(79, 172, 254, 0.6);
+        }
+
+        /* WhatsApp Status Overlay */
+        #status-overlay {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: black;
+            z-index: 1000;
+            justify-content: center;
+            align-items: center;
+        }
+
+        /* Progress Bar Container */
+        .progress-container {
+            position: absolute;
+            top: 15px;
+            left: 5%;
+            width: 90%;
+            display: flex;
+            gap: 5px;
+            z-index: 1002;
+        }
+
+        .bar {
+            height: 3px;
+            background: rgba(255, 255, 255, 0.3);
+            flex: 1;
+            border-radius: 2px;
+            overflow: hidden;
+        }
+
+        .fill {
+            height: 100%;
+            background: white;
+            width: 0%;
+        }
+
+        /* Navigation Arrows */
+        .nav-btn {
+            position: absolute;
+            top: 50%;
+            transform: translateY(-50%);
+            background: rgba(255,255,255,0.1);
+            color: white;
+            border: none;
+            padding: 20px;
+            font-size: 2rem;
+            cursor: pointer;
+            z-index: 1003;
+            border-radius: 50%;
+        }
+
+        #prev-btn { left: 10px; }
+        #next-btn { right: 10px; }
+
+        #status-content {
+            width: 100%;
+            max-width: 450px;
+            height: 80vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-size: 2rem;
+            text-align: center;
+            border-radius: 15px;
+            background-size: cover;
+            background-position: center;
+        }
+
+        .close-status {
+            position: absolute;
+            top: 30px;
+            right: 20px;
+            color: white;
+            font-size: 2rem;
+            cursor: pointer;
+            z-index: 1004;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+    </style>
+</head>
+<body>
+
+    <header>
+        <h1>SHEILA CHEPTOO</h1>
+        <p class="description">
+            Hello, I'm Sheila from Kericho, 20 years old. Finished 4m4 2024,used to work in a boutique but lost my job February this year after new employee arrived. So I'm currently at home jobless. I just like cooking, staying at home with my laptop and creating websites like this one. I'm open to making new friends and exploring new ideas.<br>
+            I'm a part time programmer and passionate about Tech. A simple girl from the Savannahs of Londiani, Kericho County. I also like singing, playing guitar and learning and improving myself daily. A Christian at AIC church. Karibu sana,hakuna matata😊
+        </p>
+        
+        <button class="btn" onclick="openStatus()">VIEW MY PHOTOS</button>
+    </header>
+
+    <div id="status-overlay">
+        <span class="close-status" onclick="closeStatus()">&times;</span>
+        
+        <div class="progress-container" id="progress-bars">
+            </div>
+
+        <button class="nav-btn" id="prev-btn" onclick="prevStatus()">&lt;</button>
+        <button class="nav-btn" id="next-btn" onclick="nextStatus()">&gt;</button>
+
+        <div id="status-content">
+            </div>
+    </div>
+
+    <div style="margin-top: auto; padding-bottom: 50px;">
+        <a href="index2.html" class="btn">MY PHONE NUMBER</a>
+    </div>
+
+    <script>
+        const totalItems = 10;
+        let currentIndex = 0;
+        let timer;
+        const duration = 15000; // 15 seconds per image
+
+        // Generate placeholders and progress bars
+        const progressContainer = document.getElementById('progress-bars');
+        for (let i = 0; i < totalItems; i++) {
+            const bar = document.createElement('div');
+            bar.className = 'bar';
+            bar.innerHTML = `<div class="fill" id="fill-${i}"></div>`;
+            progressContainer.appendChild(bar);
+        }
+
+        function openStatus() {
+            document.getElementById('status-overlay').style.display = 'flex';
+            showStatus(0);
+        }
+
+        function closeStatus() {
+            document.getElementById('status-overlay').style.display = 'none';
+            clearTimeout(timer);
+            resetFills();
+        }
+
+        function showStatus(index) {
+            clearTimeout(timer);
+            if (index >= totalItems) {
+                closeStatus();
+                return;
+            }
+            if (index < 0) index = 0;
+
+            currentIndex = index;
+            const content = document.getElementById('status-content');
+            
+            // Reset all fills after current index
+            resetFills(index);
+
+            // Update Content
+            const imgPath = `pic${index + 1}.jpg`;
+            content.style.backgroundImage = `url('${imgPath}')`;
+            content.style.backgroundColor = `hsl(${index * 36}, 70%, 30%)`; // Dynamic colorful placeholders
+            content.innerHTML = `<span>My Picture ${index + 1}</span>`;
+
+            // Animate Progress Bar
+            const currentFill = document.getElementById(`fill-${index}`);
+            currentFill.style.transition = 'none';
+            currentFill.style.width = '0%';
+            
+            setTimeout(() => {
+                currentFill.style.transition = `width ${duration}ms linear`;
+                currentFill.style.width = '100%';
+            }, 50);
+
+            timer = setTimeout(() => {
+                nextStatus();
+            }, duration);
+        }
+
+        function nextStatus() {
+            // Instant fill for the one we just finished
+            document.getElementById(`fill-${currentIndex}`).style.transition = 'none';
+            document.getElementById(`fill-${currentIndex}`).style.width = '100%';
+            showStatus(currentIndex + 1);
+        }
+
+        function prevStatus() {
+            showStatus(currentIndex - 1);
+        }
+
+        function resetFills(fromIndex = 0) {
+            for (let i = 0; i < totalItems; i++) {
+                const fill = document.getElementById(`fill-${i}`);
+                fill.style.transition = 'none';
+                fill.style.width = i < fromIndex ? '100%' : '0%';
+            }
+        }
+    </script>
+</body>
+          </html>
